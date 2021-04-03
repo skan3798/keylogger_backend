@@ -130,3 +130,6 @@ dmypy.json
 
 #Docker
 Dockerfile
+
+#Json
+main_cfg.json
