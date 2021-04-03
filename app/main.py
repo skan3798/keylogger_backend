@@ -3,8 +3,6 @@ import json
 from json import JSONEncoder
 import mysql.connector
 
-keylog = []
-
 #start flask app
 app = Flask(__name__)
 
@@ -27,15 +25,26 @@ def addLog():
   data = json.loads(request.data)
 
   for key in range(len(data)):
-    print(data[key])
-    time = data[key]['time']
-    key_down = data[key]['key-down']
-    key_pressed = data[key]['key']
+    # datetime = data[key]['datetime']
+    # epochTime = data[key]['epochTime']
+    # isKeyDown = data[key]['isKeyDown']
+    # windowName = data[key]['windowName']
+    # asciiCode = data[key]['asciiCode']
+    # asciiChar = data[key]['asciiChar']
+    # keyName = data[key]['keyName']
+    # isCaps = data[key]['isCaps']
+    # processedKey = data[key]['processedKey']
+  
+    try:
+      self.pushDB(data[key])
 
-    k = Key(time,key_down,key_pressed)
-    keylog.append(k)
-
+    except Exception as e:
+      print(e)
+      return make_response(jsonify({'response': 'Fail', 'code':500}), 500)
+  
   return make_response(jsonify({'response': 'Success', 'code':200}), 200)
+
+
 
 def pushDB(payload):
   main_cfg = load_cfg('./main_cfg.json')
