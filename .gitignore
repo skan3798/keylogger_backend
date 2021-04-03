@@ -133,3 +133,7 @@ Dockerfile
 
 #Json
 main_cfg.json
+
+logs/
+reload.sh
+
