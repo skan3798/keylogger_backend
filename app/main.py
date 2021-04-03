@@ -43,7 +43,8 @@ def pushDB(payload):
   db = mysql.connector.connect (
     host=main_cfg['dbHost'],
     user=main_cfg['sqlUser'],
-    pass=main_cfg['sqlPass'],
+    password=main_cfg['sqlPass'],
+    database=main_cfg['db']
   )
   
   mycursor = mydb.cursor()
