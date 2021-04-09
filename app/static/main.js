@@ -21,7 +21,7 @@ $(document).ready(function(){
   function showKeyTable(keys){
     $('#keyAll > table > tbody').empty();
   
-    for (const [key,value] of Object.entries(keys)){
+    /*for (const [key,value] of Object.entries(keys)){
       var k = JSON.parse(value);
 	  console.log(k);
       $('#keylogView > table > tbody').append(
@@ -35,5 +35,17 @@ $(document).ready(function(){
 	    + k.processedKey
 	    +'</td></tr>'
       );
-    }
+    } */
+    keys.forEach((item) => {
+        console.log(item)
+        '<tr><td>'
+        + item.datetime
+        +'</td><td>'
+        + item.isKeyDown
+        +'</td><td>'
+        + item.windowName
+        +'</td><td>'
+	    + item.processedKey
+	    +'</td></tr>'
+    })
   }
