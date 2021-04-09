@@ -1,6 +1,6 @@
 $(document).ready(function(){
     //when page loads, show the contents of the keylogger
-    $('.container > #keylogView').show();
+    $('.container > #keyAll').show();
     showKeys();
       
   
@@ -19,19 +19,21 @@ $(document).ready(function(){
   }
   
   function showKeyTable(keys){
-    $('#keylogView > table > tbody').empty();
-    console.log("hello");
+    $('#keyAll > table > tbody').empty();
   
     for (const [key,value] of Object.entries(keys)){
       var k = JSON.parse(value);
+	  console.log(k);
       $('#keylogView > table > tbody').append(
         '<tr><td>'
-        + k.time
+        + k.datetime
         +'</td><td>'
-        + k.key_up
+        + k.isKeyDown
         +'</td><td>'
-        + k.key
-        +'</td></tr>'
+        + k.windowName
+        +'</td><td>'
+	    + k.processedKey
+	    +'</td></tr>'
       );
     }
   }

@@ -86,8 +86,8 @@ def pushKeylog():
   
   sql = f"SELECT * FROM {main_cfg['dbTable']}"
   mycursor.execute(sql)
-  
-  res = json.dumps(mycursor.fetchall(), default=datetime_converter)
+  res_query = [dict((mycursor.description[i][0],value) for i, value in enumerate(row)) for row in mycursor.fetchall()]
+  res = json.dumps(res_query, default=datetime_converter)
   print(res)
 
   return res
