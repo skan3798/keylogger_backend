@@ -12,16 +12,14 @@ function showKeys() {
       method: "GET",
       dataType: 'json',
       success: showKeyTable,
-      fail: console.log("FAILED")
+      fail: console.log("Failed to show key log")
     });
-    console.log("help");
 }
   
 function showKeyTable(keys){
     $('#keyAll > table > tbody').empty();
     keys.forEach((item) => {
-        console.log(item)
-        $('#keylogView > table > tbody').append(
+        $('#keyAll > table > tbody').append(
             '<tr><td>'
             + item.datetime
             +'</td><td>'
@@ -41,8 +39,8 @@ function showWords() {
       url: "./showWordlog",
       method: "GET",
       dataType: 'json',
-      success: showWordable,
-      fail: console.log("FAILED")
+      success: showWordTable,
+      fail: console.log("Failed to show word log")
     });
     console.log("help");
 }
@@ -51,7 +49,7 @@ function showWordTable(words){
     $('#wordAll > table > tbody').empty();
     words.forEach((item) => {
         console.log(item)
-        $('#wordlogView > table > tbody').append(
+        $('#wordAll > table > tbody').append(
             '<tr><td>'
             + item.datetime
             +'</td><td>'
