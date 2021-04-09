@@ -33,6 +33,42 @@
         </ul> -->
       </nav>
     </header>
-    {% block content %}{% endblock %}
+    <!-- {% block content %}{% endblock %} -->
+    <div class="container">
+
+      <!-- View all keypresses -->
+      <div id="keyAll" class="table-responsive">
+          <h2>View all key events</h2>
+          <div class="alert alert-success" id="keyall-success" style="visibility: hidden"></div>
+          <table class="table table-striped table-bordered">
+              <thead>
+                  <tr>
+                      <th>datetime</th>
+                      <th>isKeyDown</th>
+                      <th>windowName</th>
+                      <th>processedKey</th>
+                  </tr>
+              </thead>
+              <tbody>
+              </tbody>
+          </table>
+      </div>
+  
+      <!-- View keydown events -->
+      <div id="keyDown">
+          <h2>View all key down</h2>
+          <div class="alert alert-success" id="keyall-success" style="visibility: hidden"></div>
+          <table class="table table-striped table-bordered">
+              <thead>
+                  <tr>
+                      <th>datetime</th>
+                      <th>windowName</th>
+                      <th>processedKey</th>
+                  </tr>
+              </thead>
+              <tbody>
+              </tbody>
+          </table>
+      </div>
   </body>
 </html>
