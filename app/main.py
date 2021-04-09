@@ -4,7 +4,7 @@ from json import JSONEncoder
 import mysql.connector
 from datetime import datetime
 from process import Process
-from load_config import db_cursor
+from load_config import load_cfg,db_cursor
 
 #start flask app
 app = Flask(__name__, template_folder='templates')
@@ -25,7 +25,6 @@ def addLog():
 
   for key in range(len(data)):      
     try:
-      print(data[str(key)].get('isKeyDown')
       pushDB_keys(json.loads(data[str(key)]))
       
       
@@ -39,7 +38,7 @@ def addLog():
 
 
 def pushDB_keys(payload):
-  # main_cfg = load_cfg('./main_cfg.json')
+  main_cfg = load_cfg('./main_cfg.json')
 
   # db = mysql.connector.connect (
   #   host=main_cfg['dbHost'],
@@ -92,8 +91,8 @@ def pushKeylog():
 
 @app.route('/showWordlog', methods=['GET'])
 def pushWordlog():
-  # main_cfg = load_cfg('./main_cfg.json')
-  # res = {}
+  main_cfg = load_cfg('./main_cfg.json')
+  res = {}
 
   # db = mysql.connector.connect (
   #   host=main_cfg['dbHost'],

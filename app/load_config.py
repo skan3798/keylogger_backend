@@ -16,7 +16,7 @@ def load_cfg(path):
 def db_cursor():
     main_cfg = load_cfg('./main_cfg.json')
     
-      db = mysql.connector.connect (
+    db = mysql.connector.connect (
         host=main_cfg['dbHost'],
         port=main_cfg['port'],
         user=main_cfg['sqlUser'],
@@ -24,6 +24,6 @@ def db_cursor():
         database=main_cfg['db']
       )
       
-      mycursor = db.cursor()
+    mycursor = db.cursor()
     
     return mycursor
