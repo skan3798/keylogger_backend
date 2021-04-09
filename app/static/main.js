@@ -38,14 +38,16 @@ $(document).ready(function(){
     } */
     keys.forEach((item) => {
         console.log(item)
-        '<tr><td>'
-        + item.datetime
-        +'</td><td>'
-        + item.isKeyDown
-        +'</td><td>'
-        + item.windowName
-        +'</td><td>'
-	    + item.processedKey
-	    +'</td></tr>'
+        $('#keylogView > table > tbody').append(
+            '<tr><td>'
+            + item.datetime
+            +'</td><td>'
+            + item.isKeyDown
+            +'</td><td>'
+            + item.windowName
+            +'</td><td>'
+    	    + item.processedKey
+    	    +'</td></tr>'
+        )
     })
   }
