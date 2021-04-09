@@ -20,11 +20,11 @@ def hello():
 @app.route('/pushKeys', methods=['POST'])
 def addLog():
   data = json.loads(request.data)
-  # Process.separateBreakChar(data)
+  process = Process()
 
   for key in range(len(data)):      
     try:
-      pushDB_keys(json.loads(data[str(key)]))
+      pushDB_keys(process,json.loads(data[str(key)]))
       
       
 
@@ -36,7 +36,7 @@ def addLog():
   return make_response(jsonify({'response': 'Success', 'code':200}), 200)
 
 
-def pushDB_keys(payload):
+def pushDB_keys(process,payload):
   main_cfg = load_cfg('./main_cfg.json')
 
   db = mysql.connector.connect (
@@ -49,9 +49,9 @@ def pushDB_keys(payload):
   
   mycursor = db.cursor()
   if (payload['isKeyDown'] == 1):
-    Process.separateBreakChar(payload)
+    process.separateBreakChar(payload)
     
-  mycursor = db_cursor()
+  mycursor = db.cursor()
   
   sql = f"INSERT INTO {main_cfg['dbKeyTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
   val = (f"{payload['datetime']}", f"{payload['epochTime']}", f"{payload['isKeyDown']}", f"{payload['windowName']}", f"{payload['asciiCode']}", f"{payload['asciiChar']}", f"{payload['keyName']}", f"{payload['isCaps']}", f"{payload['processedKey']}")

