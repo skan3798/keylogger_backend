@@ -37,6 +37,9 @@ def addLog():
 
 
 def pushDB_keys(process,payload):
+  if (payload['isKeyDown'] == 1):
+    process.separateBreakChar(payload)
+    
   main_cfg = load_cfg('./main_cfg.json')
 
   db = mysql.connector.connect (
@@ -47,10 +50,6 @@ def pushDB_keys(process,payload):
     database=main_cfg['db']
   )
   
-  mycursor = db.cursor()
-  if (payload['isKeyDown'] == 1):
-    process.separateBreakChar(payload)
-    
   mycursor = db.cursor()
   
   sql = f"INSERT INTO {main_cfg['dbKeyTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"

