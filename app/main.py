@@ -37,7 +37,7 @@ def addLog():
 
 
 def pushDB_keys(process,payload):
-  if (payload['isKeyDown'] == 1):
+  if (payload['keyName'] != "Space" or payload['keyName'] != "Return"):
     process.separateBreakChar(payload)
     
   main_cfg = load_cfg('./main_cfg.json')
