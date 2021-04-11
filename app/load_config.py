@@ -12,4 +12,3 @@ def load_cfg(path):
     except Exception as e:
         print("Exception: ", e)
     return jsonres
-    

