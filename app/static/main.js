@@ -11,7 +11,8 @@ $(document).ready(function(){
             { data: 'processedKey' },
             { data: 'windowName' },
             { data: 'isKeyDown' }
-        ]
+        ],
+        "order": [[ 0, "desc" ]]
 
     });
 
@@ -24,7 +25,8 @@ $(document).ready(function(){
             { data: 'processedWord' },
             { data: 'isEmail'},
             { data: 'isPassword' }
-        ]
+        ],
+        "order": [[ 0, "desc" ]]
 
     });
     $('.dataTables_length').addClass('bs-select');
@@ -38,22 +40,24 @@ $(document).ready(function(){
     var keyTable = $('#tableKeypresses').DataTable();
     $('#keydownToggle').change(function () {
         if (this.checked) {
-            addSearchParameter("isKeyDown")
-            keyTable.search(generateSearchQuery()).draw();
+            addSearchParameter(keySearches, "isKeyDown")
+            keyTable.search(generateSearchQuery(keySearches)).draw();
         } else {
-            removeSearchParameter("isKeyDown")
-            keyTable.search(generateSearchQuery()).draw();
+            removeSearchParameter(keySearches, "isKeyDown")
+            keyTable.search(generateSearchQuery(keySearches)).draw();
         }
     });
 
     $('#noneToggle').change(function () {
         if (this.checked) {
             // wordTable.search("isPassword").draw();
-            addSearchParameter("None")
-            wordTable.search(generateSearchQuery()).draw();
+            addSearchParameter(keySearches, "^((?!None).)*$")
+            wordTable.search(
+                generateSearchQuery(keySearches),true
+            ).draw();
         } else {
-            removeSearchParameter("None")
-            wordTable.search(generateSearchQuery()).draw();
+            removeSearchParameter(keySearches, "None")
+            wordTable.search(generateSearchQuery(keySearches)).draw();
         }
     });
 
@@ -66,22 +70,22 @@ $(document).ready(function(){
     
     $('#emailToggle').change(function () {
         if (this.checked) {
-            addSearchParameter("isEmail")
-            wordTable.search(generateSearchQuery()).draw();
+            addSearchParameter(wordSearches, "isEmail")
+            wordTable.search(generateSearchQuery(wordSearches)).draw();
         } else {
-            removeSearchParameter("isEmail")
-            wordTable.search(generateSearchQuery()).draw();
+            removeSearchParameter(wordSearches, "isEmail")
+            wordTable.search(generateSearchQuery(wordSearches)).draw();
         }
     });
 
     $('#passwordToggle').change(function () {
         if (this.checked) {
             // wordTable.search("isPassword").draw();
-            addSearchParameter("isPassword")
-            wordTable.search(generateSearchQuery()).draw();
+            addSearchParameter(wordSearches, "isPassword")
+            wordTable.search(generateSearchQuery(wordSearches)).draw();
         } else {
-            removeSearchParameter("isPassword")
-            wordTable.search(generateSearchQuery()).draw();
+            removeSearchParameter(wordSearches, "isPassword")
+            wordTable.search(generateSearchQuery(wordSearches)).draw();
         }
     });
 
@@ -89,22 +93,23 @@ $(document).ready(function(){
 })
 
 // Searches are stored as strings inside an array
-var searches = new Set();
+var keySearches = new Set();
+var wordSearches = new Set();
 
 // When passed into datatable, these strings will become a single string,
 //      with each element separated by a space (" ")
-function addSearchParameter(query) {
-    searches.add(query);
+function addSearchParameter(set, query) {
+    set.add(query);
 }
 
-function removeSearchParameter(query) {
-    searches.delete(query);
+function removeSearchParameter(set, query) {
+    set.delete(query);
 }
 
-function generateSearchQuery() {
+function generateSearchQuery(set) {
     strArr = []
 
-    for (str of searches) {
+    for (str of set) {
         strArr.push(str);
     }
 
