@@ -82,7 +82,7 @@ def pushKeylog():
   mycursor = db.cursor()
   '''
   res = {}
-  (main_cfg, mycursor) = db_cursor()
+  main_cfg, mycursor = db_cursor()
   
   sql = f"SELECT * FROM {main_cfg['dbKeyTable']}"
   mycursor.execute(sql)
@@ -111,7 +111,7 @@ def pushWordlog():
   mycursor = db.cursor()
   '''
   res = {}
-  (main_cfg, mycursor) = db_cursor()
+  main_cfg, mycursor = db_cursor()
   
   sql = f"SELECT * FROM {main_cfg['dbWordTable']}"
   mycursor.execute(sql)

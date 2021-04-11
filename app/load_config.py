@@ -25,5 +25,5 @@ def db_cursor():
         )
         mycursor = db.cursor()
         
-        return (main_cfg, mycursor)
+        return main_cfg, mycursor
     
