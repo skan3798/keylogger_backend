@@ -1,5 +1,9 @@
 $(document).ready(function(){
     // var data = getKeyData();
+
+    $('#emailToggle').bootstrapToggle();
+    $('#passwordToggle').bootstrapToggle();
+
     $('#tableKeypresses').DataTable({
         data: getKeyData(),
         columns: [
@@ -17,7 +21,7 @@ $(document).ready(function(){
             { data: 'datetime' },
             { data: 'windowName' },
             { data: 'processedWord' },
-            { data: 'isEmail' },
+            { data: 'isEmail'},
             { data: 'isPassword' }
         ]
 
@@ -113,8 +117,18 @@ class Word {
         this.datetime = datetime;
         this.windowName = windowName;
         this.processedWord = processedWord;
-        this.isEmail = isEmail;
-        this.isPassword = isPassword;
+
+        if (isEmail) {
+            this.isEmail = "isEmail"
+        } else {
+            this.isEmail = "notEmail"
+        }
+        
+        if (isPassword) {
+            this.isPassword = "isPassword"
+        } else {
+            this.isPassword = "notPassword"
+        }
 
     }
 }
