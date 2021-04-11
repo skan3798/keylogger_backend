@@ -8,9 +8,9 @@ $(document).ready(function(){
         data: getKeyData(),
         columns: [
             { data: 'datetime' },
-            { data: 'isKeyDown' },
+            { data: 'processedKey' },
             { data: 'windowName' },
-            { data: 'processedKey' }
+            { data: 'isKeyDown' }
         ]
 
     });
@@ -30,7 +30,38 @@ $(document).ready(function(){
     $('.dataTables_length').addClass('bs-select');
 
     // Search functionality for toggles
+    // ======================
+    // =
+    // =    Key toggles
+    // =
+    // ======================
     var keyTable = $('#tableKeypresses').DataTable();
+    $('#keydownToggle').change(function () {
+        if (this.checked) {
+            addSearchParameter("isKeyDown")
+            keyTable.search(generateSearchQuery()).draw();
+        } else {
+            removeSearchParameter("isKeyDown")
+            keyTable.search(generateSearchQuery()).draw();
+        }
+    });
+
+    $('#noneToggle').change(function () {
+        if (this.checked) {
+            // wordTable.search("isPassword").draw();
+            addSearchParameter("None")
+            wordTable.search(generateSearchQuery()).draw();
+        } else {
+            removeSearchParameter("None")
+            wordTable.search(generateSearchQuery()).draw();
+        }
+    });
+
+    // ======================
+    // =
+    // =    Word toggles
+    // =
+    // ======================
     var wordTable = $('#tableWords').DataTable();
     
     $('#emailToggle').change(function () {
@@ -88,7 +119,11 @@ function generateSearchQuery() {
 class Key {
     constructor(datetime, isKeyDown, windowName, processedKey) {
         this.datetime = datetime;
-        this.isKeyDown = isKeyDown;
+        if (isKeyDown) {
+            this.isKeyDown = "isKeyDown"
+        } else {
+            this.isKeyDown = "notKeyDown"
+        }
         this.windowName = windowName;
         this.processedKey = processedKey;
 
