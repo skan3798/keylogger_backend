@@ -4,10 +4,12 @@ from json import JSONEncoder
 import mysql.connector
 from datetime import datetime
 from process import Process
-from load_config import load_cfg, db_cursor
+from load_config import load_cfg
 
 #start flask app
 app = Flask(__name__, template_folder='templates')
+
+main_cfg = load_cfg('./main_cfg.json')
 
 def datetime_converter(o):
   if isinstance(o,datetime):
@@ -66,10 +68,7 @@ def showKeylog():
   return render_template('base.html')
 
 @app.route('/showKeylog', methods=['GET'])
-def pushKeylog():
-  '''
-  main_cfg = load_cfg('./main_cfg.json')
-  
+def pushKeylog():  
 
   db = mysql.connector.connect (
     host=main_cfg['dbHost'],
@@ -80,9 +79,8 @@ def pushKeylog():
   )
   
   mycursor = db.cursor()
-  '''
+  
   res = {}
-  main_cfg, mycursor = db_cursor()
   
   sql = f"SELECT * FROM {main_cfg['dbKeyTable']}"
   mycursor.execute(sql)
@@ -95,10 +93,7 @@ def pushKeylog():
   return res
 
 @app.route('/showWordlog', methods=['GET'])
-def pushWordlog():
-  '''
-  main_cfg = load_cfg('./main_cfg.json')
-  
+def pushWordlog():  
 
   db = mysql.connector.connect (
     host=main_cfg['dbHost'],
@@ -109,9 +104,8 @@ def pushWordlog():
   )
   
   mycursor = db.cursor()
-  '''
+  
   res = {}
-  main_cfg, mycursor = db_cursor()
   
   sql = f"SELECT * FROM {main_cfg['dbWordTable']}"
   mycursor.execute(sql)
