@@ -37,7 +37,6 @@ $(document).ready(function(){
     // =    Key toggles
     // =
     // ======================
-    var keyTable = $('#tableKeypresses').DataTable();
     $('#keydownToggle').change(function () {
         var keyDownQuery = "isKeyDown"
         if (this.checked) {
@@ -61,8 +60,6 @@ $(document).ready(function(){
     // =    Word toggles
     // =
     // ======================
-    var wordTable = $('#tableWords').DataTable();
-    
     $('#emailToggle').change(function () {
         var emailQuery = "isEmail"
         if (this.checked) {
@@ -94,6 +91,8 @@ $(document).ready(function(){
 // Searches are stored as strings inside an array
 var keySearches = new Set();
 var wordSearches = new Set();
+var keyTable = $('#tableKeypresses').DataTable();
+var wordTable = $('#tableWords').DataTable();
 
 // When passed into datatable, these strings will become a single string,
 //      with each element separated by a space (" ")
