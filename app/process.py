@@ -61,7 +61,7 @@ class Process:
     - Also check that if the first key we recieve is a Space or return, that this is not pushed to database
     '''
     def appendWord(self,data):
-        break_char = ["Return", "Space"]
+        break_char = ["Return", "Space", "Tab"]
         
         if (data['processedKey']):
             if (len(self.word) == 0):
