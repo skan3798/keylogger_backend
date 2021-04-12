@@ -30,9 +30,19 @@ def validate():
   username = request.form['username']
   password = request.form['password']
   
-  if (username and password):
-    print("NO!")
+  return redirect(url_for('fail'))
+
+@app.route('/loginFail')
+def fail():
+  return render_template('fail.html')
+    
+@app.route('/checkPokemon', methods=['POST'])
+def choosePokemon():
+  pokemon = request.form['pokemon']
+  print("POKEMON " +pokemon)
+  if (pokemon == "pikachu"):
     return redirect(url_for('hacker'))
+  return redirect(url_for('fail'))
 
 
 #######################################
