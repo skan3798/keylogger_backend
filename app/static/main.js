@@ -41,18 +41,18 @@ $(document).ready(function(){
     $('#keydownToggle').change(function () {
         var keyDownQuery = "isKeyDown"
         if (this.checked) {
-            addSearchParameter(keySearches, keyDownQuery)
+            addSearchParameter(keySearches, keyDownQuery, keyTable)
         } else {
-            removeSearchParameter(keySearches, keyDownQuery)
+            removeSearchParameter(keySearches, keyDownQuery), keyTable
         }
     });
 
     $('#noneToggle').change(function () {
         var noneQuery = "^((?!None).)*$"
         if (this.checked) {
-            addSearchParameter(keySearches, noneQuery)
+            addSearchParameter(keySearches, noneQuery, keyTable)
         } else {
-            removeSearchParameter(keySearches, noneQuery)
+            removeSearchParameter(keySearches, noneQuery, keyTable)
         }
     });
 
@@ -66,18 +66,18 @@ $(document).ready(function(){
     $('#emailToggle').change(function () {
         var emailQuery = "isEmail"
         if (this.checked) {
-            addSearchParameter(wordSearches, emailQuery)
+            addSearchParameter(wordSearches, emailQuery, wordTable)
         } else {
-            removeSearchParameter(wordSearches, emailQuery)
+            removeSearchParameter(wordSearches, emailQuery, wordTable)
         }
     });
 
     $('#passwordToggle').change(function () {
         var passwordQuery = "isPassword"
         if (this.checked) {
-            addSearchParameter(wordSearches, passwordQuery)
+            addSearchParameter(wordSearches, passwordQuery, wordTable)
         } else {
-            removeSearchParameter(wordSearches, passwordQuery)
+            removeSearchParameter(wordSearches, passwordQuery, wordTable)
         }
     });
 
@@ -99,16 +99,16 @@ var wordSearches = new Set();
 //      with each element separated by a space (" ")
 
 // Add search parameter for table
-function addSearchParameter(set, query) {
+function addSearchParameter(set, query, table) {
     set.add(query);
-    updateTable(keyTable, keySearches);
+    updateTable(table, keySearches);
 
 }
 
 // Remove search parameter for table
-function removeSearchParameter(set, query) {
+function removeSearchParameter(set, query, table) {
     set.delete(query);
-    updateTable(keyTable, keySearches);
+    updateTable(table, keySearches);
 
 }
 
