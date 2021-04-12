@@ -9,6 +9,7 @@ from load_config import load_cfg
 #start flask app
 app = Flask(__name__, template_folder='templates')
 
+#load configurations from json file
 main_cfg = load_cfg('./main_cfg.json')
 
 # Convert SQL datetime type to JSON readable format
@@ -39,7 +40,7 @@ def fail():
 @app.route('/checkPokemon', methods=['POST'])
 def choosePokemon():
   pokemon = request.form['pokemon']
-  print("POKEMON " +pokemon)
+
   if (pokemon == "pikachu"):
     return redirect(url_for('hacker'))
   return redirect(url_for('fail'))

