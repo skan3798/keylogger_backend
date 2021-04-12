@@ -97,7 +97,11 @@ class Process:
         if "@" in check_word:
             self.payload['isEmail'] = 1
         
-        elif ((check_word.isalpha() and check_word.isdigit()) == False):
+        elif (check_word.isalpha() == False and check_word.isdigit() == False):
+            print("HELOOOOOOO")
+            print(self.payload)
+            print(check_word.isalpha())
+            print(check_word.isdigit())
             self.payload['isPassword'] = 1
             
 
