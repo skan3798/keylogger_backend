@@ -26,7 +26,7 @@ class Process:
         self.pushDB_keys(payload)
         self.appendWord(payload)
     
-    def pushDB_keys():
+    def pushDB_keys(self,payload):
         db = mysql.connector.connect (
             host=self.cfg['dbHost'],
             port=self.cfg['port'],
