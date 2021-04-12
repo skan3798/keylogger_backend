@@ -61,8 +61,9 @@ class Process:
     - Also check that if the first key we recieve is a Space or return, that this is not pushed to database
     '''
     def appendWord(self,data):
-        skip = ["Return", "Space", "RShift","LShift"]
-        if (data['keyName'] not in skip):
+        #skip = ["Return", "Space", "RShift","LShift", "Capital", "Back", "Escape", "Tab", "Delete","Down", "Right","Up","Left"]
+        if (data['processedKey']:
+            print(data)
             if (len(self.word) == 0):
                 self.payload['datetime'] = data['datetime']
                 self.payload['epoch'] = data['epochTime']
