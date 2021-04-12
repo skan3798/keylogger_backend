@@ -101,14 +101,14 @@ var wordSearches = new Set();
 // Add search parameter for table
 function addSearchParameter(set, query, table) {
     set.add(query);
-    updateTable(table, keySearches);
+    updateTable(table, set);
 
 }
 
 // Remove search parameter for table
 function removeSearchParameter(set, query, table) {
     set.delete(query);
-    updateTable(table, keySearches);
+    updateTable(table, set);
 
 }
 

