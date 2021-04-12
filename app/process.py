@@ -61,7 +61,7 @@ class Process:
     - Also check that if the first key we recieve is a Space or return, that this is not pushed to database
     '''
     def appendWord(self,data):
-        skip = ["Return", "Space"]
+        break_char = ["Return", "Space"]
         
         if (data['processedKey']):
             print(data)
@@ -88,7 +88,8 @@ class Process:
     
     For email: check if the string contains "@"
     For password: check if string is a mix of alphabet and numbers
-    
+    - isalpha returns True if the entire string is alphabet letters, False otherwise
+    - isdigit returns True if the entire string is numbers, False otherwise
     Future iterations, isPassword can be determined using a dictionary attack style comparison
     '''
     def checkEmailPassword(self):
@@ -96,7 +97,7 @@ class Process:
         if "@" in check_word:
             self.payload['isEmail'] = 1
         
-        elif (check_word.isalpha() and check_word.isdigit() and check_word != ""):
+        elif ((check_word.isalpha() and check_word.isdigit()) == False):
             self.payload['isPassword'] = 1
             
 
