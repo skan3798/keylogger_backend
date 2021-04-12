@@ -1,7 +1,6 @@
 import os
 import json
 from json import JSONEncoder
-import mysql.connector
 
 #load the configurations from json file
 def load_cfg(path):

